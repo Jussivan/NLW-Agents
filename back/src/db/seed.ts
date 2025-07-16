@@ -2,20 +2,25 @@ import { reset, seed } from 'drizzle-seed';
 import { db, sql } from './connection.ts';
 import { schema } from './schema/index.ts';
 
-await reset(db, schema);
-await seed(db, schema).refine((f) => {
-    return {
-        rooms: {
-            count: 5,
-            columns: {
-                name: f.companyName(),
-                description: f.loremIpsum(),
-            },
-        },
-        questions: {
-            count: 20,
-        },
-    }
+const partialSchema = {
+  rooms: schema.rooms,
+  questions: schema.questions,
+};
+
+await reset(db, partialSchema);
+await seed(db, partialSchema).refine((f) => {
+  return {
+    rooms: {
+      count: 1,
+      columns: {
+        name: f.companyName(),
+        description: f.loremIpsum(),
+      },
+    },
+    questions: {
+      count: 5,
+    },
+  }
 }); 
 await sql.end();
 
